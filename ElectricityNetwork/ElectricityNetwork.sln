@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31702.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectricityNetwork.WPF", "ElectricityNetwork.WPF\ElectricityNetwork.WPF.csproj", "{37E19068-643D-446A-AA4D-78E680BB02A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectricityNetwork.Model", "ElectricityNetwork.Model\ElectricityNetwork.Model.csproj", "{E12CFC43-D8A3-4521-9BCF-53FA7C645071}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37E19068-643D-446A-AA4D-78E680BB02A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37E19068-643D-446A-AA4D-78E680BB02A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37E19068-643D-446A-AA4D-78E680BB02A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37E19068-643D-446A-AA4D-78E680BB02A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E12CFC43-D8A3-4521-9BCF-53FA7C645071}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E12CFC43-D8A3-4521-9BCF-53FA7C645071}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E12CFC43-D8A3-4521-9BCF-53FA7C645071}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E12CFC43-D8A3-4521-9BCF-53FA7C645071}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {796A67CA-5BDC-46B6-95D2-235BCE667B62}
+	EndGlobalSection
+EndGlobal
