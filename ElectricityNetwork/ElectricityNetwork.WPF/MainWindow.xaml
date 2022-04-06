@@ -5,8 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ElectricityNetwork.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="Electricity Network" Height="540" Width="960">
+    <DockPanel x:Name="MainPanel">
+        <DockPanel x:Name="HeaderPanel" DockPanel.Dock="Top" Style="{StaticResource HeaderPanelStyle}">
+            <StackPanel x:Name="HeaderLoadXML" DockPanel.Dock="Right" Style="{StaticResource HeaderLoadXMLStyle}">
+                <TextBlock Style="{StaticResource HeaderLoadXMLStyleTextBlock}">Geographics.xml</TextBlock>
+                <Button>Load XML</Button>
+            </StackPanel>
+            <Border></Border>
+            <StackPanel>
+                <TextBlock Style="{StaticResource LegendTextBlockStyle}">LEGEND:</TextBlock>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#1358a2"></Ellipse>
+                    <TextBlock Style="{StaticResource LegendItemTextBlockStyle}">Node</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#00c4e2"></Ellipse>
+                    <TextBlock Style="{StaticResource LegendItemTextBlockStyle}">Switch</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#e33282"></Ellipse>
+                    <TextBlock Style="{StaticResource LegendItemTextBlockStyle}">Substation</TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+
+        <DockPanel DockPanel.Dock="Top" Background="#3379B7">
+            <Slider x:Name="CanvasSlider" Margin="5" Background="#3379B7" Minimum=".1" Maximum="10" Value=".1" DockPanel.Dock="Top"/>
+        </DockPanel>
+
+        <DockPanel x:Name="DrawingNetworkPanel">
+            <Canvas x:Name="DrawingNetworkCanvas">
+                
+            </Canvas>
+        </DockPanel>
+    </DockPanel>
 </Window>
