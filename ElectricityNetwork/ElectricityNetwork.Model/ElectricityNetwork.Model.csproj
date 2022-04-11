@@ -31,6 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,7 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\BlockModel.cs" />
     <Compile Include="Models\ElectricityNetworkContentModel.cs" />
+    <Compile Include="Models\Enums\EBlockType.cs" />
+    <Compile Include="Models\GridModel.cs" />
     <Compile Include="Models\LineEntity.cs" />
     <Compile Include="Models\NodeEntity.cs" />
     <Compile Include="Models\Point.cs" />

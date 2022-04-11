@@ -39,7 +39,7 @@ namespace ElectricityNetwork.WPF
 
                 if (openFileDialog.ShowDialog().GetValueOrDefault())
                 {
-                    DrawElectricityNetworkHelper.LoadXMLContent(openFileDialog.FileName);
+                    DrawElectricityNetworkHelper.LoadXMLContent(openFileDialog.FileName, DrawingNetworkCanvas.Width, DrawingNetworkCanvas.Height);
                 }
             }
             catch (Exception)
