@@ -51,5 +51,10 @@ namespace ElectricityNetwork.WPF
                 MessageBox.Show("Error", "Invalid file", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
+        private void DrawElementsOnCanvasBtn_Click(object sender, RoutedEventArgs e)
+        {
+            DrawElectricityNetworkHelper.DrawElements(DrawingNetworkCanvas, electricityNetworkModel);
+        }
     }
 }

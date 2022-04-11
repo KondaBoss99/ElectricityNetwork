@@ -6,6 +6,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Xml;
 
 namespace ElectricityNetwork.WPF.Utils
@@ -213,7 +216,6 @@ namespace ElectricityNetwork.WPF.Utils
                 networkModel.Switches[i].Y = ret.Y;
             }
         }
-
         private static Point GetClosestAvailablePoint(ElectricityNetworkContentModel networkModel, double x, double y)
         {
             if (!IsPointUsed(networkModel, x, y))
@@ -255,8 +257,6 @@ namespace ElectricityNetwork.WPF.Utils
             networkModel.Points.Add(new Point() { X = closestX, Y = closestY });
             return new Point() { X = closestX * 2, Y = closestY * 2 };
         }
-
-
         private static bool IsPointUsed(ElectricityNetworkContentModel networkModel, double x, double y)
         {
             for (int i = 0; i < networkModel.Points.Count; i++)
@@ -264,6 +264,59 @@ namespace ElectricityNetwork.WPF.Utils
                     return true;
 
             return false;
+        }
+
+        #endregion
+
+        #region Drawing Methods
+
+        public static void DrawElements(Canvas mainCanvas, ElectricityNetworkContentModel networkModel)
+        {
+            DrawSubstations(mainCanvas, networkModel);
+            DrawNodes(mainCanvas, networkModel);
+            DrawSwitches(mainCanvas, networkModel);
+        }
+
+        private static void DrawSubstations(Canvas drawingCanvas, ElectricityNetworkContentModel networkModel)
+        {
+            for (int i = 0; i < networkModel.Substations.Count; i++)
+            {
+                Ellipse shape = new Ellipse() { Height = 6, Width = 6, Stroke = Brushes.Black, Fill = Brushes.GreenYellow };
+                shape.ToolTip = "Substation: \n" + "ID:" + networkModel.Substations[i].Id + "\nName: " + networkModel.Substations[i].Name;
+                Canvas.SetLeft(shape, networkModel.Substations[i].X + 2);
+                Canvas.SetTop(shape, networkModel.Substations[i].Y + 2);
+                networkModel.Substations[i].PEShape = shape;
+                networkModel.PowerEntities.Add(networkModel.Substations[i]);
+                drawingCanvas.Children.Add(networkModel.Substations[i].PEShape);
+            }
+        }
+
+        private static void DrawNodes(Canvas drawingCanvas, ElectricityNetworkContentModel networkModel)
+        {
+            for (int i = 0; i < networkModel.Nodes.Count; i++)
+            {
+                Ellipse shape = new Ellipse() { Height = 6, Width = 6, Stroke = Brushes.Black, Fill = Brushes.DarkSlateGray };
+                shape.ToolTip = "Node: \n" + "ID:" + networkModel.Nodes[i].Id + "\nName: " + networkModel.Nodes[i].Name;
+                Canvas.SetLeft(shape, networkModel.Nodes[i].X + 2);
+                Canvas.SetTop(shape, networkModel.Nodes[i].Y + 2);
+                networkModel.Nodes[i].PEShape = shape;
+                networkModel.PowerEntities.Add(networkModel.Nodes[i]);
+                drawingCanvas.Children.Add(networkModel.Nodes[i].PEShape);
+            }
+        }
+
+        private static void DrawSwitches(Canvas drawingCanvas, ElectricityNetworkContentModel networkModel)
+        {
+            for (int i = 0; i < networkModel.Switches.Count; i++)
+            {
+                Ellipse shape = new Ellipse() { Height = 6, Width = 6, Stroke = Brushes.Black, Fill = Brushes.DarkCyan };
+                shape.ToolTip = "Switch: \n" + "ID:" + networkModel.Switches[i].Id + "\nName: " + networkModel.Switches[i].Name + "\nStatus: " + networkModel.Switches[i].Status;
+                Canvas.SetLeft(shape, networkModel.Switches[i].X + 2);
+                Canvas.SetTop(shape, networkModel.Switches[i].Y + 2);
+                networkModel.Switches[i].PEShape = shape;
+                networkModel.PowerEntities.Add(networkModel.Switches[i]);
+                drawingCanvas.Children.Add(networkModel.Switches[i].PEShape);
+            }
         }
 
         #endregion

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ElectricityNetwork.Model.Models
 {
-    public class PowerEntity
+    public class PowerEntity : PowerEntityBase
     {
         private long id;
         private string name;
