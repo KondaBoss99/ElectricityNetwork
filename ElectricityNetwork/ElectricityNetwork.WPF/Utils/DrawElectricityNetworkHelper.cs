@@ -12,7 +12,7 @@ namespace ElectricityNetwork.WPF.Utils
 {
     public static class DrawElectricityNetworkHelper
     {
-        public static void LoadXMLContent(string path, double canvasWidth, double canvasHeight)
+        public static ElectricityNetworkContentModel LoadXMLContent(string path, double canvasWidth, double canvasHeight)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(path);
@@ -33,6 +33,7 @@ namespace ElectricityNetwork.WPF.Utils
 
             GenerateGrid(networkModel);
 
+            return networkModel;
         }
 
 

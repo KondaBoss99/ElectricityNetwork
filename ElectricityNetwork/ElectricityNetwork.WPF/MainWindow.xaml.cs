@@ -1,4 +1,5 @@
-﻿using ElectricityNetwork.WPF.Utils;
+﻿using ElectricityNetwork.Model.Models;
+using ElectricityNetwork.WPF.Utils;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace ElectricityNetwork.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ElectricityNetworkContentModel electricityNetworkModel;
         public MainWindow()
         {
             InitializeComponent();
@@ -39,7 +41,9 @@ namespace ElectricityNetwork.WPF
 
                 if (openFileDialog.ShowDialog().GetValueOrDefault())
                 {
-                    DrawElectricityNetworkHelper.LoadXMLContent(openFileDialog.FileName, DrawingNetworkCanvas.Width, DrawingNetworkCanvas.Height);
+                    electricityNetworkModel = DrawElectricityNetworkHelper.LoadXMLContent(openFileDialog.FileName, DrawingNetworkCanvas.Width, DrawingNetworkCanvas.Height);
+                    LoadedXMLFileName.Text = openFileDialog.SafeFileName;
+                    DrawElementsOnCanvasBtn.IsEnabled = true;
                 }
             }
             catch (Exception)

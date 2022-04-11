@@ -8,9 +8,13 @@
         Title="Electricity Network" Height="540" Width="960">
     <DockPanel x:Name="MainPanel">
         <DockPanel x:Name="HeaderPanel" DockPanel.Dock="Top" Style="{StaticResource HeaderPanelStyle}">
+            <StackPanel>
+                
+            </StackPanel>
             <StackPanel x:Name="HeaderLoadXML" DockPanel.Dock="Right" Style="{StaticResource HeaderLoadXMLStyle}">
-                <TextBlock Style="{StaticResource HeaderLoadXMLStyleTextBlock}">Geographics.xml</TextBlock>
+                <TextBlock x:Name="LoadedXMLFileName" Style="{StaticResource HeaderLoadXMLStyleTextBlock}"></TextBlock>
                 <Button x:Name="LoadXMLBtn" Click="LoadXMLBtn_Click">Load XML</Button>
+                <Button x:Name="DrawElementsOnCanvasBtn" IsEnabled="False">Draw</Button>
             </StackPanel>
             <Border></Border>
             <StackPanel>
