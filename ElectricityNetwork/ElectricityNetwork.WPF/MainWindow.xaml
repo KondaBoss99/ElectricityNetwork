@@ -10,7 +10,7 @@
         <DockPanel x:Name="HeaderPanel" DockPanel.Dock="Top" Style="{StaticResource HeaderPanelStyle}">
             <StackPanel x:Name="HeaderLoadXML" DockPanel.Dock="Right" Style="{StaticResource HeaderLoadXMLStyle}">
                 <TextBlock Style="{StaticResource HeaderLoadXMLStyleTextBlock}">Geographics.xml</TextBlock>
-                <Button>Load XML</Button>
+                <Button x:Name="LoadXMLBtn" Click="LoadXMLBtn_Click">Load XML</Button>
             </StackPanel>
             <Border></Border>
             <StackPanel>

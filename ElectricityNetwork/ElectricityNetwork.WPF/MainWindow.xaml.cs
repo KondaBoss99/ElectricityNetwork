@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ElectricityNetwork.WPF.Utils;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,27 @@ namespace ElectricityNetwork.WPF
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void LoadXMLBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog()
+                {
+                    DefaultExt = "xml",
+                    Filter = "XML Files|*.xml"
+                };
+
+                if (openFileDialog.ShowDialog().GetValueOrDefault())
+                {
+                    DrawElectricityNetworkHelper.LoadXMLContent(openFileDialog.FileName);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error", "Invalid file", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
     }
 }
