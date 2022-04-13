@@ -16,7 +16,8 @@ namespace ElectricityNetwork.Model.Models
 
         public void OnClick(object sender, EventArgs e)
         {
-            PEShape.Fill = Brushes.Yellow;
+            this.SetColor();
+            //PEShape.Fill = Brushes.GreenYellow;
         }
     }
 }

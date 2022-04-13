@@ -5,30 +5,31 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ElectricityNetwork.WPF"
         mc:Ignorable="d"
-        Title="Electricity Network" Height="540" Width="960">
+        Title="Electricity Network" Height="600" Width="800">
+
     <DockPanel x:Name="MainPanel">
         <DockPanel x:Name="HeaderPanel" DockPanel.Dock="Top" Style="{StaticResource HeaderPanelStyle}">
             <StackPanel>
-                
+
             </StackPanel>
             <StackPanel x:Name="HeaderLoadXML" DockPanel.Dock="Right" Style="{StaticResource HeaderLoadXMLStyle}">
                 <TextBlock x:Name="LoadedXMLFileName" Style="{StaticResource HeaderLoadXMLStyleTextBlock}"></TextBlock>
                 <Button x:Name="LoadXMLBtn" Click="LoadXMLBtn_Click">Load XML</Button>
-                <Button x:Name="DrawElementsOnCanvasBtn" IsEnabled="False" Click="DrawElementsOnCanvasBtn_Click">Draw</Button>
+                <Button x:Name="DrawElementsOnCanvasBtn" IsEnabled="False">Draw</Button>
             </StackPanel>
             <Border></Border>
             <StackPanel>
                 <TextBlock Style="{StaticResource LegendTextBlockStyle}">LEGEND:</TextBlock>
                 <StackPanel Orientation="Horizontal">
-                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#1358a2"></Ellipse>
+                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#1358A2"></Ellipse>
                     <TextBlock Style="{StaticResource LegendItemTextBlockStyle}">Node</TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#00c4e2"></Ellipse>
+                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#00C4E2"></Ellipse>
                     <TextBlock Style="{StaticResource LegendItemTextBlockStyle}">Switch</TextBlock>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#e33282"></Ellipse>
+                    <Ellipse Style="{StaticResource LegendItemEllipseStyle}" Fill="#E33282"></Ellipse>
                     <TextBlock Style="{StaticResource LegendItemTextBlockStyle}">Substation</TextBlock>
                 </StackPanel>
             </StackPanel>
@@ -39,9 +40,17 @@
         </DockPanel>
 
         <DockPanel x:Name="DrawingNetworkPanel">
-            <Canvas x:Name="DrawingNetworkCanvas">
-                
-            </Canvas>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Canvas Width="5000" Height="5000"  Name="GridCanvas">
+                        <Canvas.LayoutTransform>
+                            <ScaleTransform ScaleX="{Binding ElementName=CanvasSlider, Path=Value}"
+                                ScaleY="{Binding ElementName=CanvasSlider, Path=Value}"/>
+                        </Canvas.LayoutTransform>
+
+                    </Canvas>
+                </Border>
+            </ScrollViewer>
         </DockPanel>
     </DockPanel>
 </Window>
