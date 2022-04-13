@@ -473,11 +473,6 @@ namespace ElectricityNetwork.WPF.Utils
                     angleLine.Stroke = new SolidColorBrush(Colors.Black);
                 }
             }
-            //if (false)
-            //{
-            //    for (int i = 0; i < Resources.Count; i++)
-            //        Resources[i].SetColor();
-            //}
         }
     }
 
