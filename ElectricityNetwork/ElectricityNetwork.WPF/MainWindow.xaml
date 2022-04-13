@@ -15,7 +15,7 @@
             <StackPanel x:Name="HeaderLoadXML" DockPanel.Dock="Right" Style="{StaticResource HeaderLoadXMLStyle}">
                 <TextBlock x:Name="LoadedXMLFileName" Style="{StaticResource HeaderLoadXMLStyleTextBlock}"></TextBlock>
                 <Button x:Name="LoadXMLBtn" Click="LoadXMLBtn_Click">Load XML</Button>
-                <Button x:Name="DrawElementsOnCanvasBtn" IsEnabled="False">Draw</Button>
+                <Button x:Name="DrawElementsOnCanvasBtn" IsEnabled="False" Click="DrawElementsOnCanvasBtn_Click">Draw</Button>
             </StackPanel>
             <Border></Border>
             <StackPanel>

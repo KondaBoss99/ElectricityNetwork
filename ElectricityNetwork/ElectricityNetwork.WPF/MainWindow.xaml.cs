@@ -47,14 +47,20 @@ namespace ElectricityNetwork.WPF
                     mainWindowInputOutput.LoadAndParseXML(path);
                     mainWindowInputOutput.ScaleCanvas(GridCanvas.Width, GridCanvas.Height);
                     mainWindowInputOutput.ConvertToCanvasCoordinates();
-                    mainWindowInputOutput.DrawElements(this.GridCanvas);
+
+                    LoadedXMLFileName.Text = openFileDialog.SafeFileName;
+                    DrawElementsOnCanvasBtn.IsEnabled = true;
                 }
                 catch (Exception)
                 {
                     MessageBox.Show("Error", "Invalid file", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
+        }
 
+        private void DrawElementsOnCanvasBtn_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindowInputOutput.DrawElements(this.GridCanvas);
         }
     }
 }
