@@ -42,7 +42,7 @@
         <DockPanel x:Name="DrawingNetworkPanel">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Canvas Width="5000" Height="5000"  Name="GridCanvas">
+                    <Canvas Width="5000" Height="5000"  Name="DrawingNetworkCanvas">
                         <Canvas.LayoutTransform>
                             <ScaleTransform ScaleX="{Binding ElementName=CanvasSlider, Path=Value}"
                                 ScaleY="{Binding ElementName=CanvasSlider, Path=Value}"/>

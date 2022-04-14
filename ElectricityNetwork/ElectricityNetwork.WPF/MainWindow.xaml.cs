@@ -24,7 +24,6 @@ namespace ElectricityNetwork.WPF
     public partial class MainWindow : Window
     {
         private DrawElectricityNetworkHelper mainWindowInputOutput = new DrawElectricityNetworkHelper();
-        private string path = "";
 
         public MainWindow()
         {
@@ -33,34 +32,38 @@ namespace ElectricityNetwork.WPF
 
         private void LoadXMLBtn_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.DefaultExt = "xml";
-            openFileDialog.Filter = "XML Files|*.xml";
-
-            if (openFileDialog.ShowDialog() == true)
+            try
             {
-                try
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    DefaultExt = "xml",
+                    Filter = "XML Files|*.xml"
+                };
+
+                if (openFileDialog.ShowDialog().GetValueOrDefault())
                 {
                     mainWindowInputOutput = new DrawElectricityNetworkHelper();
-                    GridCanvas.Children.Clear();
-                    path = openFileDialog.FileName;
-                    mainWindowInputOutput.LoadAndParseXML(path);
-                    mainWindowInputOutput.ScaleCanvas(GridCanvas.Width, GridCanvas.Height);
+                    this.DrawingNetworkCanvas.Children.Clear();
+
+                    mainWindowInputOutput.LoadAndParseXML(openFileDialog.FileName);
+                    mainWindowInputOutput.ScaleCanvas(this.DrawingNetworkCanvas.Width, this.DrawingNetworkCanvas.Height);
                     mainWindowInputOutput.ConvertToCanvasCoordinates();
 
                     LoadedXMLFileName.Text = openFileDialog.SafeFileName;
                     DrawElementsOnCanvasBtn.IsEnabled = true;
                 }
-                catch (Exception)
-                {
-                    MessageBox.Show("Error", "Invalid file", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
             }
+            catch (Exception)
+            {
+                MessageBox.Show("Error", "Invalid file", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            
         }
 
         private void DrawElementsOnCanvasBtn_Click(object sender, RoutedEventArgs e)
         {
-            mainWindowInputOutput.DrawElements(this.GridCanvas);
+            mainWindowInputOutput.DrawElements(this.DrawingNetworkCanvas);
         }
     }
 }
