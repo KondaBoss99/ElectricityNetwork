@@ -45,9 +45,7 @@ namespace ElectricityNetwork.WPF
                     mainWindowInputOutput = new DrawElectricityNetworkHelper();
                     this.DrawingNetworkCanvas.Children.Clear();
 
-                    mainWindowInputOutput.LoadAndParseXML(openFileDialog.FileName);
-                    mainWindowInputOutput.ScaleCanvas(this.DrawingNetworkCanvas.Width, this.DrawingNetworkCanvas.Height);
-                    mainWindowInputOutput.ConvertToCanvasCoordinates();
+                    mainWindowInputOutput.LoadAndParseXML(openFileDialog.FileName, this.DrawingNetworkCanvas.Width, this.DrawingNetworkCanvas.Height);
 
                     LoadedXMLFileName.Text = openFileDialog.SafeFileName;
                     DrawElementsOnCanvasBtn.IsEnabled = true;

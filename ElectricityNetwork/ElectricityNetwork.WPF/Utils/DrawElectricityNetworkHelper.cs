@@ -31,7 +31,7 @@ namespace ElectricityNetwork.WPF.Utils
             Resources = new List<PowerEntity>();
         }
 
-        public void LoadAndParseXML(string path)
+        public void LoadAndParseXML(string path, double width, double height)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(path);
@@ -43,6 +43,8 @@ namespace ElectricityNetwork.WPF.Utils
             substations = GenerateSubstations(substationNodeList);
             switches = GenerateSwitches(switchNodeList);
             nodes = GenerateNodes(nodeNodeList);
+
+            InitializeGrid(width, height);
         }
 
         private List<LineEntity> GenerateLines(XmlNodeList lineNodeList)
@@ -143,7 +145,14 @@ namespace ElectricityNetwork.WPF.Utils
             return nodesList;
         }
 
-        public void ScaleCanvas(double width, double height)
+        private void InitializeGrid(double width, double height)
+        {
+            ScaleCanvas(width, height);
+            GenerateGrid();
+            ConvertToCanvasCoordinates();
+        }
+
+        private void ScaleCanvas(double width, double height)
         {
             double substationMinX, substationMinY, nodeMinX, nodeMinY, switchMinX, switchMinY, substationNodeMinX, substationNodeMinY;
             substationMinX = substations.Min((obj) => obj.X);
@@ -171,13 +180,11 @@ namespace ElectricityNetwork.WPF.Utils
             maxY = Math.Max(substationNodeMaxY, switchMaxY);
             xParts = (width / 2) / (maxX - minimumX);
             yParts = (height / 2) / (maxY - minimumY);
-
-            GenerateGrid();
         }
 
         private void GenerateGrid()
         {
-            mainGrid = new GridModel(500+1, 500+1);
+            mainGrid = new GridModel(500 + 1, 500 + 1);
             for (int i = 0; i <= 500; i++)
                 for (int j = 0; j <= 500; j++)
                     mainGrid.BlockMatrix[i, j] = new BlockModel()
@@ -191,7 +198,7 @@ namespace ElectricityNetwork.WPF.Utils
                     };
         }
 
-        public void ConvertToCanvasCoordinates()
+        private void ConvertToCanvasCoordinates()
         {
             for (int i = 0; i < substations.Count; i++)
             {
