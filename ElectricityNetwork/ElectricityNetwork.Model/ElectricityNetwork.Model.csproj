@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\BlockModel.cs" />
+    <Compile Include="Models\ElectricityNetworkModel.cs" />
     <Compile Include="Models\Enums\EBlockType.cs" />
     <Compile Include="Models\GridModel.cs" />
     <Compile Include="Models\LineEntity.cs" />

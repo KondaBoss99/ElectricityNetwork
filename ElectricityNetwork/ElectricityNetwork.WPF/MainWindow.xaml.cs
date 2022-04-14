@@ -23,7 +23,7 @@ namespace ElectricityNetwork.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private DrawElectricityNetworkHelper mainWindowInputOutput = new DrawElectricityNetworkHelper();
+        private ElectricityNetworkModel electricityNetworkModel = new ElectricityNetworkModel();
 
         public MainWindow()
         {
@@ -42,10 +42,9 @@ namespace ElectricityNetwork.WPF
 
                 if (openFileDialog.ShowDialog().GetValueOrDefault())
                 {
-                    mainWindowInputOutput = new DrawElectricityNetworkHelper();
                     this.DrawingNetworkCanvas.Children.Clear();
 
-                    mainWindowInputOutput.LoadAndParseXML(openFileDialog.FileName, this.DrawingNetworkCanvas.Width, this.DrawingNetworkCanvas.Height);
+                    this.electricityNetworkModel = DrawElectricityNetworkHelper.LoadAndParseXML(openFileDialog.FileName, this.DrawingNetworkCanvas.Width, this.DrawingNetworkCanvas.Height);
 
                     LoadedXMLFileName.Text = openFileDialog.SafeFileName;
                     DrawElementsOnCanvasBtn.IsEnabled = true;
@@ -61,7 +60,7 @@ namespace ElectricityNetwork.WPF
 
         private void DrawElementsOnCanvasBtn_Click(object sender, RoutedEventArgs e)
         {
-            mainWindowInputOutput.DrawElements(this.DrawingNetworkCanvas);
+            DrawElectricityNetworkHelper.DrawElectricityNetworkElements(this.electricityNetworkModel, this.DrawingNetworkCanvas);
         }
     }
 }

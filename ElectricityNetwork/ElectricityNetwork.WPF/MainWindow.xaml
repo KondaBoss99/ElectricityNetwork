@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ElectricityNetwork.WPF"
         mc:Ignorable="d"
-        Title="Electricity Network" Height="600" Width="800">
+        Title="Electricity Network" Height="720" Width="720">
 
     <DockPanel x:Name="MainPanel">
         <DockPanel x:Name="HeaderPanel" DockPanel.Dock="Top" Style="{StaticResource HeaderPanelStyle}">

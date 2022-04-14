@@ -11,27 +11,10 @@ using System.Xml;
 
 namespace ElectricityNetwork.WPF.Utils
 {
-    public class DrawElectricityNetworkHelper
+    public static class DrawElectricityNetworkHelper
     {
-        public readonly List<PowerEntity> Resources;
-        private List<LineEntity> lines = new List<LineEntity>();
-        private List<SubstationEntity> substations = new List<SubstationEntity>();
-        private List<SwitchEntity> switches = new List<SwitchEntity>();
-        private List<NodeEntity> nodes = new List<NodeEntity>();
-        private List<Point> utilizedPoints = new List<Point>();
-        private GridModel mainGrid;
-
-        private double xParts;
-        private double yParts;
-        private double minimumX;
-        private double minimumY;
-
-        public DrawElectricityNetworkHelper()
-        {
-            Resources = new List<PowerEntity>();
-        }
-
-        public void LoadAndParseXML(string path, double width, double height)
+        #region Load XML
+        public static ElectricityNetworkModel LoadAndParseXML(string path, double width, double height)
         {
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(path);
@@ -39,15 +22,24 @@ namespace ElectricityNetwork.WPF.Utils
             XmlNodeList substationNodeList = xmlDoc.SelectNodes("/NetworkModel/Substations/SubstationEntity");
             XmlNodeList switchNodeList = xmlDoc.SelectNodes("/NetworkModel/Switches/SwitchEntity");
             XmlNodeList nodeNodeList = xmlDoc.SelectNodes("/NetworkModel/Nodes/NodeEntity");
-            lines = GenerateLines(lineNodeList);
-            substations = GenerateSubstations(substationNodeList);
-            switches = GenerateSwitches(switchNodeList);
-            nodes = GenerateNodes(nodeNodeList);
 
-            InitializeGrid(width, height);
+            ElectricityNetworkModel electricityNetworkModel = new ElectricityNetworkModel
+            {
+                Lines = GenerateElectricityNetworkLines(lineNodeList),
+                Substations = GenerateElectricityNetworkSubstations(substationNodeList),
+                Switches = GenerateElectricityNetworkSwitches(switchNodeList),
+                Nodes = GenerateElectricityNetworkNodes(nodeNodeList),
+            };
+
+            InitializeGrid(electricityNetworkModel, width, height);
+
+            return electricityNetworkModel;
         }
 
-        private List<LineEntity> GenerateLines(XmlNodeList lineNodeList)
+        #endregion
+
+        #region Generate Lists
+        private static List<LineEntity> GenerateElectricityNetworkLines(XmlNodeList lineNodeList)
         {
             List<LineEntity> linesList = new List<LineEntity>();
 
@@ -77,8 +69,7 @@ namespace ElectricityNetwork.WPF.Utils
             }
             return linesList;
         }
-
-        private List<SubstationEntity> GenerateSubstations(XmlNodeList substationNodeList)
+        private static List<SubstationEntity> GenerateElectricityNetworkSubstations(XmlNodeList substationNodeList)
         {
             List<SubstationEntity> substationsList = new List<SubstationEntity>();
 
@@ -99,8 +90,7 @@ namespace ElectricityNetwork.WPF.Utils
             }
             return substationsList;
         }
-
-        private List<SwitchEntity> GenerateSwitches(XmlNodeList switchNodeList)
+        private static List<SwitchEntity> GenerateElectricityNetworkSwitches(XmlNodeList switchNodeList)
         {
             List<SwitchEntity> switchesList = new List<SwitchEntity>();
 
@@ -122,8 +112,7 @@ namespace ElectricityNetwork.WPF.Utils
             }
             return switchesList;
         }
-
-        private List<NodeEntity> GenerateNodes(XmlNodeList nodeNodeList)
+        private static List<NodeEntity> GenerateElectricityNetworkNodes(XmlNodeList nodeNodeList)
         {
             List<NodeEntity> nodesList = new List<NodeEntity>();
 
@@ -145,49 +134,50 @@ namespace ElectricityNetwork.WPF.Utils
             return nodesList;
         }
 
-        private void InitializeGrid(double width, double height)
-        {
-            ScaleCanvas(width, height);
-            GenerateGrid();
-            ConvertToCanvasCoordinates();
-        }
+        #endregion
 
-        private void ScaleCanvas(double width, double height)
+        #region Initializer Methods
+        private static void InitializeGrid(ElectricityNetworkModel electricityNetworkModel, double width, double height)
+        {
+            ScaleCanvas(electricityNetworkModel, width, height);
+            GenerateGrid(electricityNetworkModel);
+            ConvertToCanvasCoordinates(electricityNetworkModel);
+        }
+        private static void ScaleCanvas(ElectricityNetworkModel electricityNetworkModel, double width, double height)
         {
             double substationMinX, substationMinY, nodeMinX, nodeMinY, switchMinX, switchMinY, substationNodeMinX, substationNodeMinY;
-            substationMinX = substations.Min((obj) => obj.X);
-            nodeMinX = nodes.Min((obj) => obj.X);
-            switchMinX = switches.Min((obj) => obj.X);
-            substationMinY = substations.Min((obj) => obj.Y);
-            nodeMinY = nodes.Min((obj) => obj.Y);
-            switchMinY = switches.Min((obj) => obj.Y);
+            substationMinX = electricityNetworkModel.Substations.Min((obj) => obj.X);
+            nodeMinX = electricityNetworkModel.Nodes.Min((obj) => obj.X);
+            switchMinX = electricityNetworkModel.Switches.Min((obj) => obj.X);
+            substationMinY = electricityNetworkModel.Substations.Min((obj) => obj.Y);
+            nodeMinY = electricityNetworkModel.Nodes.Min((obj) => obj.Y);
+            switchMinY = electricityNetworkModel.Switches.Min((obj) => obj.Y);
             substationNodeMinX = Math.Min(substationMinX, nodeMinX);
-            minimumX = Math.Min(substationNodeMinX, switchMinX);
+            electricityNetworkModel.MinimumX = Math.Min(substationNodeMinX, switchMinX);
             substationNodeMinY = Math.Min(substationMinY, nodeMinY);
-            minimumY = Math.Min(substationNodeMinY, switchMinY);
+            electricityNetworkModel.MinimumY = Math.Min(substationNodeMinY, switchMinY);
 
             double substationMaxX, substationMaxY, nodeMaxX, NodeMaxY, switchMaxX, switchMaxY, substationNodeMaxX, substationNodeMaxY, maxX, maxY;
 
-            substationMaxX = substations.Max((obj) => obj.X);
-            nodeMaxX = nodes.Max((obj) => obj.X);
-            switchMaxX = switches.Max((obj) => obj.X);
-            substationMaxY = substations.Max((obj) => obj.Y);
-            NodeMaxY = nodes.Max((obj) => obj.Y);
-            switchMaxY = switches.Max((obj) => obj.Y);
+            substationMaxX = electricityNetworkModel.Substations.Max((obj) => obj.X);
+            nodeMaxX = electricityNetworkModel.Nodes.Max((obj) => obj.X);
+            switchMaxX = electricityNetworkModel.Switches.Max((obj) => obj.X);
+            substationMaxY = electricityNetworkModel.Substations.Max((obj) => obj.Y);
+            NodeMaxY = electricityNetworkModel.Nodes.Max((obj) => obj.Y);
+            switchMaxY = electricityNetworkModel.Switches.Max((obj) => obj.Y);
             substationNodeMaxX = Math.Min(substationMaxX, nodeMaxX);
             substationNodeMaxY = Math.Min(substationMaxY, NodeMaxY);
             maxX = Math.Max(substationNodeMaxX, switchMaxX);
             maxY = Math.Max(substationNodeMaxY, switchMaxY);
-            xParts = (width / 2) / (maxX - minimumX);
-            yParts = (height / 2) / (maxY - minimumY);
+            electricityNetworkModel.XParts = (width / 2) / (maxX - electricityNetworkModel.MinimumX);
+            electricityNetworkModel.YParts = (height / 2) / (maxY - electricityNetworkModel.MinimumY);
         }
-
-        private void GenerateGrid()
+        private static void GenerateGrid(ElectricityNetworkModel electricityNetworkModel)
         {
-            mainGrid = new GridModel(500 + 1, 500 + 1);
+            electricityNetworkModel.MainGrid = new GridModel(500 + 1, 500 + 1);
             for (int i = 0; i <= 500; i++)
                 for (int j = 0; j <= 500; j++)
-                    mainGrid.BlockMatrix[i, j] = new BlockModel()
+                    electricityNetworkModel.MainGrid.BlockMatrix[i, j] = new BlockModel()
                     {
                         X = i * 10,
                         Y = j * 10,
@@ -197,147 +187,92 @@ namespace ElectricityNetwork.WPF.Utils
                         ApproximateY = j,
                     };
         }
-
-        private void ConvertToCanvasCoordinates()
+        private static void ConvertToCanvasCoordinates(ElectricityNetworkModel electricityNetworkModel)
         {
-            for (int i = 0; i < substations.Count; i++)
+            for (int i = 0; i < electricityNetworkModel.Substations.Count; i++)
             {
-                double x = Math.Round((substations[i].X - minimumX) * xParts / 10) * 10;
-                double y = Math.Round((substations[i].Y - minimumY) * yParts / 10) * 10;
-                Point ret = GetClosestAvailablePoint(x, y);
-                substations[i].X = ret.X;
-                substations[i].Y = ret.Y;
-                mainGrid.Add(ret.X, ret.Y, EBlockType.SUBSTATION);
+                double x = Math.Round((electricityNetworkModel.Substations[i].X - electricityNetworkModel.MinimumX) * electricityNetworkModel.XParts / 10) * 10;
+                double y = Math.Round((electricityNetworkModel.Substations[i].Y - electricityNetworkModel.MinimumY) * electricityNetworkModel.YParts / 10) * 10;
+                Point ret = GetClosestAvailablePoint(electricityNetworkModel, x, y);
+                electricityNetworkModel.Substations[i].X = ret.X;
+                electricityNetworkModel.Substations[i].Y = ret.Y;
+                electricityNetworkModel.MainGrid.Add(ret.X, ret.Y, EBlockType.SUBSTATION);
             }
 
-            for (int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < electricityNetworkModel.Nodes.Count; i++)
             {
-                double x = Math.Round((nodes[i].X - minimumX) * xParts / 10) * 10;
-                double y = Math.Round((nodes[i].Y - minimumY) * yParts / 10) * 10;
-                Point ret = GetClosestAvailablePoint(x, y);
-                mainGrid.Add(ret.X, ret.Y, EBlockType.NODE);
-                nodes[i].X = ret.X;
-                nodes[i].Y = ret.Y;
+                double x = Math.Round((electricityNetworkModel.Nodes[i].X - electricityNetworkModel.MinimumX) * electricityNetworkModel.XParts / 10) * 10;
+                double y = Math.Round((electricityNetworkModel.Nodes[i].Y - electricityNetworkModel.MinimumY) * electricityNetworkModel.YParts / 10) * 10;
+                Point ret = GetClosestAvailablePoint(electricityNetworkModel, x, y);
+                electricityNetworkModel.MainGrid.Add(ret.X, ret.Y, EBlockType.NODE);
+                electricityNetworkModel.Nodes[i].X = ret.X;
+                electricityNetworkModel.Nodes[i].Y = ret.Y;
             }
 
-            for (int i = 0; i < switches.Count; i++)
+            for (int i = 0; i < electricityNetworkModel.Switches.Count; i++)
             {
-                double x = Math.Round((switches[i].X - minimumX) * xParts / 10) * 10;
-                double y = Math.Round((switches[i].Y - minimumY) * yParts / 10) * 10;
-                Point ret = GetClosestAvailablePoint(x, y);
-                mainGrid.Add(ret.X, ret.Y, EBlockType.SWITCH);
-                switches[i].X = ret.X;
-                switches[i].Y = ret.Y;
+                double x = Math.Round((electricityNetworkModel.Switches[i].X - electricityNetworkModel.MinimumX) * electricityNetworkModel.XParts / 10) * 10;
+                double y = Math.Round((electricityNetworkModel.Switches[i].Y - electricityNetworkModel.MinimumY) * electricityNetworkModel.YParts / 10) * 10;
+                Point ret = GetClosestAvailablePoint(electricityNetworkModel, x, y);
+                electricityNetworkModel.MainGrid.Add(ret.X, ret.Y, EBlockType.SWITCH);
+                electricityNetworkModel.Switches[i].X = ret.X;
+                electricityNetworkModel.Switches[i].Y = ret.Y;
             }
         }
 
-
-        public Point GetClosestAvailablePoint(double x, double y)
+        #endregion
+        
+        #region Drawing Methods
+        public static void DrawElectricityNetworkElements(ElectricityNetworkModel electricityNetworkModel, Canvas mainCanvas)
         {
-            if (!IsPointUsed(x, y))
-            {
-                utilizedPoints.Add(new Point() { X = x, Y = y } );
-
-                return new Point() { X = x * 2, Y = y * 2 };
-            }
-
-            double closestX = x - 10;
-            closestX = (closestX < 0) ? closestX + 10 : closestX;
-
-            double closestY = y - 10;
-            closestY = (closestY < 0) ? closestY + 10 : closestY;
-
-            while (IsPointUsed(closestX, closestY))
-            {
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        if (!IsPointUsed(closestX, closestY))
-                        {
-                            utilizedPoints.Add(new Point() { X = closestX, Y = closestY } );
-                            return new Point() { X = closestX * 2, Y = closestY * 2 };
-                        }
-                        closestY = closestY + 10;
-                    }
-                    if (!IsPointUsed(closestX, closestY))
-                    {
-                        utilizedPoints.Add(new Point() { X = closestX, Y = closestY } );
-                        return new Point() { X = closestX * 2, Y = closestY * 2 };
-                    }
-                    closestX = closestX + 10;
-                    closestY = closestY - 2 * 10;
-                }
-            }
-
-            utilizedPoints.Add(new Point() { X = closestX, Y = closestY });
-            return new Point() { X = closestX * 2, Y = closestY * 2 };
+            DrawElectricityNetworkLines(electricityNetworkModel, mainCanvas);
+            DrawElectricityNetworkSubstations(electricityNetworkModel, mainCanvas);
+            DrawElectricityNetworkNodes(electricityNetworkModel, mainCanvas);
+            DrawElectricityNetworkSwitches(electricityNetworkModel, mainCanvas);
+            DrawElectricityNetworkLineIntersections(electricityNetworkModel, mainCanvas);
         }
-
-
-        public bool IsPointUsed(double x, double y)
+        private static void DrawElectricityNetworkSubstations(ElectricityNetworkModel electricityNetworkModel, Canvas drawingCanvas)
         {
-            for (int i = 0; i < utilizedPoints.Count; i++)
-                if (utilizedPoints[i].X == x && utilizedPoints[i].Y == y)
-                    return true;
-
-            return false;
-        }
-
-        public void DrawElements(Canvas mainCanvas)
-        {
-            DrawLines(mainCanvas);
-            DrawSubstations(mainCanvas);
-            DrawNodes(mainCanvas);
-            DrawSwitches(mainCanvas);
-            DrawCrossMarks(mainCanvas);
-        }
-
-        public void DrawSubstations(Canvas drawingCanvas)
-        {
-            for (int i = 0; i < substations.Count; i++)
+            for (int i = 0; i < electricityNetworkModel.Substations.Count; i++)
             {
                 Ellipse shape = new Ellipse() { Height = 6, Width = 6, Stroke = Brushes.Black, Fill = HexColorToBrushHelper.GetBrush("#E33282") };
-                shape.ToolTip = "Substation: \n" + "ID:" + substations[i].Id + "\nName: " + substations[i].Name;
-                Canvas.SetLeft(shape, substations[i].X + 2);
-                Canvas.SetTop(shape, substations[i].Y + 2);
-                substations[i].PEShape = shape;
-                Resources.Add(substations[i]);
-                drawingCanvas.Children.Add(substations[i].PEShape);
+                shape.ToolTip = "Substation: \n" + "ID:" + electricityNetworkModel.Substations[i].Id + "\nName: " + electricityNetworkModel.Substations[i].Name;
+                Canvas.SetLeft(shape, electricityNetworkModel.Substations[i].X + 2);
+                Canvas.SetTop(shape, electricityNetworkModel.Substations[i].Y + 2);
+                electricityNetworkModel.Substations[i].PEShape = shape;
+                electricityNetworkModel.PowerEntities.Add(electricityNetworkModel.Substations[i]);
+                drawingCanvas.Children.Add(electricityNetworkModel.Substations[i].PEShape);
             }
         }
-
-        public void DrawNodes(Canvas drawingCanvas)
+        private static void DrawElectricityNetworkNodes(ElectricityNetworkModel electricityNetworkModel, Canvas drawingCanvas)
         {
-            for (int i = 0; i < nodes.Count; i++)
+            for (int i = 0; i < electricityNetworkModel.Nodes.Count; i++)
             {
                 Ellipse shape = new Ellipse() { Height = 6, Width = 6, Stroke = Brushes.Black, Fill = HexColorToBrushHelper.GetBrush("#1358A2") };
-                shape.ToolTip = "Node: \n" + "ID:" + nodes[i].Id + "\nName: " + nodes[i].Name;
-                Canvas.SetLeft(shape, nodes[i].X + 2);
-                Canvas.SetTop(shape, nodes[i].Y + 2);
-                nodes[i].PEShape = shape;
-                Resources.Add(nodes[i]);
-                drawingCanvas.Children.Add(nodes[i].PEShape);
+                shape.ToolTip = "Node: \n" + "ID:" + electricityNetworkModel.Nodes[i].Id + "\nName: " + electricityNetworkModel.Nodes[i].Name;
+                Canvas.SetLeft(shape, electricityNetworkModel.Nodes[i].X + 2);
+                Canvas.SetTop(shape, electricityNetworkModel.Nodes[i].Y + 2);
+                electricityNetworkModel.Nodes[i].PEShape = shape;
+                electricityNetworkModel.PowerEntities.Add(electricityNetworkModel.Nodes[i]);
+                drawingCanvas.Children.Add(electricityNetworkModel.Nodes[i].PEShape);
             }
         }
-
-        public void DrawSwitches(Canvas drawingCanvas)
+        private static void DrawElectricityNetworkSwitches(ElectricityNetworkModel electricityNetworkModel, Canvas drawingCanvas)
         {
-            for (int i = 0; i < switches.Count; i++)
+            for (int i = 0; i < electricityNetworkModel.Switches.Count; i++)
             {
                 Ellipse shape = new Ellipse() { Height = 6, Width = 6, Stroke = Brushes.Black, Fill = HexColorToBrushHelper.GetBrush("#00C4E2") };
-                shape.ToolTip = "Switch: \n" + "ID:" + switches[i].Id + "\nName: " + switches[i].Name + "\nStatus: " + switches[i].Status;
-                Canvas.SetLeft(shape, switches[i].X + 2);
-                Canvas.SetTop(shape, switches[i].Y + 2);
-                switches[i].PEShape = shape;
-                Resources.Add(switches[i]);
-                drawingCanvas.Children.Add(switches[i].PEShape);
+                shape.ToolTip = "Switch: \n" + "ID:" + electricityNetworkModel.Switches[i].Id + "\nName: " + electricityNetworkModel.Switches[i].Name + "\nStatus: " + electricityNetworkModel.Switches[i].Status;
+                Canvas.SetLeft(shape, electricityNetworkModel.Switches[i].X + 2);
+                Canvas.SetTop(shape, electricityNetworkModel.Switches[i].Y + 2);
+                electricityNetworkModel.Switches[i].PEShape = shape;
+                electricityNetworkModel.PowerEntities.Add(electricityNetworkModel.Switches[i]);
+                drawingCanvas.Children.Add(electricityNetworkModel.Switches[i].PEShape);
             }
         }
-
-        public void DrawLines(Canvas drawingCanvas)
+        private static void DrawElectricityNetworkLines(ElectricityNetworkModel electricityNetworkModel, Canvas drawingCanvas)
         {
-            List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>> connectedCoords = GetCoordinates();
+            List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>> connectedCoords = GetCoordinates(electricityNetworkModel);
 
             foreach (Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity> ent in connectedCoords)
             {
@@ -348,10 +283,10 @@ namespace ElectricityNetwork.WPF.Utils
                 if ((x1 == 0 || x2 == 0 || y1 == 0 || y2 == 0) || (x1 == x2 && y1 == y2))
                     continue;
 
-                List<BlockModel> lineBlocks = mainGrid.BFSCreateLine(x1, y1, x2, y2, false);
+                List<BlockModel> lineBlocks = electricityNetworkModel.MainGrid.BFSCreateLine(x1, y1, x2, y2, false);
 
                 if (lineBlocks.Count < 2)
-                    lineBlocks = mainGrid.BFSCreateLine(x1, y1, x2, y2, true);
+                    lineBlocks = electricityNetworkModel.MainGrid.BFSCreateLine(x1, y1, x2, y2, true);
 
                 Polyline angleLine = new Polyline();
                 angleLine.Stroke = new SolidColorBrush(Colors.Black);
@@ -369,7 +304,7 @@ namespace ElectricityNetwork.WPF.Utils
                             lineType = EBlockType.VLINE;
 
                         if (lineType != EBlockType.EMPTY)
-                            mainGrid.AddLine(lineBlocks[i].X, lineBlocks[i].Y, lineType);
+                            electricityNetworkModel.MainGrid.AddLine(lineBlocks[i].X, lineBlocks[i].Y, lineType);
                     }
                     System.Windows.Point linePoint = new System.Windows.Point(lineBlocks[i].X + 5, lineBlocks[i].Y + 5);
                     angleLine.Points.Add(linePoint);
@@ -383,75 +318,9 @@ namespace ElectricityNetwork.WPF.Utils
                 drawingCanvas.Children.Add(angleLine);
             }
         }
-
-
-        List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>> GetCoordinates()
+        private static void DrawElectricityNetworkLineIntersections(ElectricityNetworkModel electricityNetworkModel, Canvas drawingCanvas)
         {
-            List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>> coordinates = new List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>>();
-            foreach (LineEntity ent in lines)
-            {
-                PowerEntity startEntity = new PowerEntity();
-                PowerEntity endEntity = new PowerEntity();
-
-                double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
-
-                for (int i = 0; i < substations.Count; i++)
-                {
-                    if (substations[i].Id == ent.FirstEnd)
-                    {
-                        x1 = substations[i].X;
-                        y1 = substations[i].Y;
-                        startEntity = substations[i];
-                    }
-                    if (substations[i].Id == ent.SecondEnd)
-                    {
-                        x2 = substations[i].X;
-                        y2 = substations[i].Y;
-                        endEntity = substations[i];
-                    }
-                }
-
-                for (int i = 0; i < nodes.Count; i++)
-                {
-                    if (nodes[i].Id == ent.FirstEnd)
-                    {
-                        x1 = nodes[i].X;
-                        y1 = nodes[i].Y;
-                        startEntity = nodes[i];
-                    }
-                    if (nodes[i].Id == ent.SecondEnd)
-                    {
-                        x2 = nodes[i].X;
-                        y2 = nodes[i].Y;
-                        endEntity = nodes[i];
-                    }
-                }
-
-                for (int i = 0; i < switches.Count; i++)
-                {
-                    if (switches[i].Id == ent.FirstEnd)
-                    {
-                        x1 = switches[i].X;
-                        y1 = switches[i].Y;
-                        startEntity = switches[i];
-                    }
-                    if (switches[i].Id == ent.SecondEnd)
-                    {
-                        x2 = switches[i].X;
-                        y2 = switches[i].Y;
-                        endEntity = switches[i];
-                    }
-                }
-
-                coordinates.Add(new Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>(x1, y1, x2, y2, startEntity, endEntity, ent));
-            }
-
-            return coordinates.OrderBy(tup => ((tup.Item1 - tup.Item3) * (tup.Item1 - tup.Item3) + (tup.Item2 - tup.Item4) * (tup.Item2 - tup.Item4))).ToList();
-        }
-
-        void DrawCrossMarks(Canvas drawingCanvas)
-        {
-            foreach (BlockModel block in mainGrid.BlockMatrix)
+            foreach (BlockModel block in electricityNetworkModel.MainGrid.BlockMatrix)
             {
                 if (block.BlockType == EBlockType.CROSS_LINE)
                 {
@@ -464,7 +333,126 @@ namespace ElectricityNetwork.WPF.Utils
             }
         }
 
-        public void SetElementColors(object sender, EventArgs e)
+        #endregion
+
+        #region Helper Methods
+        private static Point GetClosestAvailablePoint(ElectricityNetworkModel electricityNetworkModel, double x, double y)
+        {
+            if (!IsPointUsed(electricityNetworkModel, x, y))
+            {
+                electricityNetworkModel.UtilizedPoints.Add(new Point() { X = x, Y = y });
+
+                return new Point() { X = x * 2, Y = y * 2 };
+            }
+
+            double closestX = x - 10;
+            closestX = (closestX < 0) ? closestX + 10 : closestX;
+
+            double closestY = y - 10;
+            closestY = (closestY < 0) ? closestY + 10 : closestY;
+
+            while (IsPointUsed(electricityNetworkModel, closestX, closestY))
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < 2; j++)
+                    {
+                        if (!IsPointUsed(electricityNetworkModel, closestX, closestY))
+                        {
+                            electricityNetworkModel.UtilizedPoints.Add(new Point() { X = closestX, Y = closestY });
+                            return new Point() { X = closestX * 2, Y = closestY * 2 };
+                        }
+                        closestY = closestY + 10;
+                    }
+                    if (!IsPointUsed(electricityNetworkModel, closestX, closestY))
+                    {
+                        electricityNetworkModel.UtilizedPoints.Add(new Point() { X = closestX, Y = closestY });
+                        return new Point() { X = closestX * 2, Y = closestY * 2 };
+                    }
+                    closestX = closestX + 10;
+                    closestY = closestY - 2 * 10;
+                }
+            }
+
+            electricityNetworkModel.UtilizedPoints.Add(new Point() { X = closestX, Y = closestY });
+            return new Point() { X = closestX * 2, Y = closestY * 2 };
+        }
+        private static bool IsPointUsed(ElectricityNetworkModel electricityNetworkModel, double x, double y)
+        {
+            for (int i = 0; i < electricityNetworkModel.UtilizedPoints.Count; i++)
+                if (electricityNetworkModel.UtilizedPoints[i].X == x && electricityNetworkModel.UtilizedPoints[i].Y == y)
+                    return true;
+
+            return false;
+        }
+        private static List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>> GetCoordinates(ElectricityNetworkModel electricityNetworkModel)
+        {
+            List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>> coordinates = new List<Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>>();
+            foreach (LineEntity ent in electricityNetworkModel.Lines)
+            {
+                PowerEntity startEntity = new PowerEntity();
+                PowerEntity endEntity = new PowerEntity();
+
+                double x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+
+                for (int i = 0; i < electricityNetworkModel.Substations.Count; i++)
+                {
+                    if (electricityNetworkModel.Substations[i].Id == ent.FirstEnd)
+                    {
+                        x1 = electricityNetworkModel.Substations[i].X;
+                        y1 = electricityNetworkModel.Substations[i].Y;
+                        startEntity = electricityNetworkModel.Substations[i];
+                    }
+                    if (electricityNetworkModel.Substations[i].Id == ent.SecondEnd)
+                    {
+                        x2 = electricityNetworkModel.Substations[i].X;
+                        y2 = electricityNetworkModel.Substations[i].Y;
+                        endEntity = electricityNetworkModel.Substations[i];
+                    }
+                }
+
+                for (int i = 0; i < electricityNetworkModel.Nodes.Count; i++)
+                {
+                    if (electricityNetworkModel.Nodes[i].Id == ent.FirstEnd)
+                    {
+                        x1 = electricityNetworkModel.Nodes[i].X;
+                        y1 = electricityNetworkModel.Nodes[i].Y;
+                        startEntity = electricityNetworkModel.Nodes[i];
+                    }
+                    if (electricityNetworkModel.Nodes[i].Id == ent.SecondEnd)
+                    {
+                        x2 = electricityNetworkModel.Nodes[i].X;
+                        y2 = electricityNetworkModel.Nodes[i].Y;
+                        endEntity = electricityNetworkModel.Nodes[i];
+                    }
+                }
+
+                for (int i = 0; i < electricityNetworkModel.Switches.Count; i++)
+                {
+                    if (electricityNetworkModel.Switches[i].Id == ent.FirstEnd)
+                    {
+                        x1 = electricityNetworkModel.Switches[i].X;
+                        y1 = electricityNetworkModel.Switches[i].Y;
+                        startEntity = electricityNetworkModel.Switches[i];
+                    }
+                    if (electricityNetworkModel.Switches[i].Id == ent.SecondEnd)
+                    {
+                        x2 = electricityNetworkModel.Switches[i].X;
+                        y2 = electricityNetworkModel.Switches[i].Y;
+                        endEntity = electricityNetworkModel.Switches[i];
+                    }
+                }
+
+                coordinates.Add(new Tuple<double, double, double, double, PowerEntity, PowerEntity, LineEntity>(x1, y1, x2, y2, startEntity, endEntity, ent));
+            }
+
+            return coordinates.OrderBy(tup => ((tup.Item1 - tup.Item3) * (tup.Item1 - tup.Item3) + (tup.Item2 - tup.Item4) * (tup.Item2 - tup.Item4))).ToList();
+        }
+
+        #endregion
+
+        #region Event Methods
+        public static void SetElementColors(object sender, EventArgs e)
         {
             Polyline angleLine = (Polyline)sender;
 
@@ -481,6 +469,7 @@ namespace ElectricityNetwork.WPF.Utils
                 }
             }
         }
-    }
 
+        #endregion
+    }
 }
