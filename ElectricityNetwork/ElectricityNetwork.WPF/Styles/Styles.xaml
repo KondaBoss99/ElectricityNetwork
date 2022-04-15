@@ -20,11 +20,17 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
         <Setter Property="Margin" Value="5 10 0 0"></Setter>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
 
     <Style x:Key="LegendItemTextBlockStyle" TargetType="{x:Type TextBlock}">
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
         <Setter Property="Margin" Value="10 0 0 0"></Setter>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        <Setter Property="FontSize" Value="14"/>
     </Style>
     
     <Style x:Key="LegendItemEllipseStyle" TargetType="{x:Type Ellipse}">
@@ -34,6 +40,7 @@
         <Setter Property="Width" Value="10"></Setter>
         <Setter Property="Stroke" Value="Black"></Setter>
         <Setter Property="StrokeThickness" Value="1.2"></Setter>
+
     </Style>
 
     <Style x:Key="HeaderLoadXMLStyleTextBlock" TargetType="{x:Type TextBlock}">
@@ -42,7 +49,7 @@
     </Style>
 
     <Style TargetType="{x:Type Button}">
-        <Setter Property="FontFamily" Value="Candara"/>
+        <Setter Property="FontFamily" Value="Comic Sans MS"/>
         <Setter Property="Padding" Value="1"/>
         <Setter Property="Width" Value="80"/>
         <Setter Property="Margin" Value="10 0 0 0"/>
@@ -114,5 +121,16 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style TargetType="{x:Type Menu}">
+        <Setter Property="Background" Value="#3379B7"/>
+        <Setter Property="MinHeight" Value="25"/>
+    </Style>
+
+    <Style TargetType="{x:Type MenuItem}">
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontFamily" Value="Comic Sans MS"/>
+        <Setter Property="FontSize" Value="16"/>
+    </Style>
+
 </ResourceDictionary>

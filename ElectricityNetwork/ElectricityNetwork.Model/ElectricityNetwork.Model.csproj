@@ -47,6 +47,7 @@
     <Compile Include="Models\BlockModel.cs" />
     <Compile Include="Models\ElectricityNetworkModel.cs" />
     <Compile Include="Models\Enums\EBlockType.cs" />
+    <Compile Include="Models\Enums\EPattern.cs" />
     <Compile Include="Models\GridModel.cs" />
     <Compile Include="Models\LineEntity.cs" />
     <Compile Include="Models\NodeEntity.cs" />
