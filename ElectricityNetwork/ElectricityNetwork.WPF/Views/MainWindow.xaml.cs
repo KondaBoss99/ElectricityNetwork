@@ -54,6 +54,9 @@ namespace ElectricityNetwork.WPF.Views
                     case EPattern.Polygon:
                         menuItemPolygon.Background = Brushes.Transparent;
                         break;
+                    case EPattern.Text:
+                        menuItemText.Background = Brushes.Transparent;
+                        break;
                     default:
                         break;
                 }
@@ -67,6 +70,9 @@ namespace ElectricityNetwork.WPF.Views
                         break;
                     case EPattern.Polygon:
                         menuItemPolygon.Background = Brushes.DarkGray;
+                        break;
+                    case EPattern.Text:
+                        menuItemText.Background = Brushes.DarkGray;
                         break;
                 }
             }
@@ -185,6 +191,24 @@ namespace ElectricityNetwork.WPF.Views
             PolygonPoints.Clear();
             polygon.MouseLeftButtonDown += new MouseButtonEventHandler(EditPolygon);
         }
+
+        public void DrawTextBlock(string text, int size, Color textColor)
+        {
+            TextBlock textBlock = new TextBlock
+            {
+                Text = text,
+                FontSize = size,
+                Foreground = new SolidColorBrush(textColor)
+            };
+
+            Canvas.SetTop(textBlock, CurrentPoint.Y);
+            Canvas.SetLeft(textBlock, CurrentPoint.X);
+
+
+            DrawingNetworkCanvas.Children.Add(textBlock);
+
+            textBlock.MouseLeftButtonDown += new MouseButtonEventHandler(EditTextBlock);
+        }
         private void EditEllipse(object sender, MouseButtonEventArgs e)
         {
             ElementToDelete = sender as UIElement;
@@ -199,6 +223,22 @@ namespace ElectricityNetwork.WPF.Views
             DrawingNetworkCanvas.Children.Remove(ElementToDelete);
             ElementToDelete = null;
         }
+
+        private void EditTextBlock(object sender, MouseButtonEventArgs e)
+        {
+            ElementToDelete = sender as UIElement;
+            TextBlock el = (TextBlock)ElementToDelete;
+
+            currentPoint.Y = Canvas.GetTop(ElementToDelete);
+            currentPoint.X = Canvas.GetLeft(ElementToDelete);
+
+            TextBlockWindow textBlock = new TextBlockWindow(el.Text, (int)el.FontSize, ((SolidColorBrush)el.Foreground).Color);
+            textBlock.Show();
+
+            DrawingNetworkCanvas.Children.Remove(ElementToDelete);
+            ElementToDelete = null;
+        }
+
         private void EditPolygon(object sender, MouseButtonEventArgs e)
         {
             ElementToDelete = sender as UIElement;
@@ -257,6 +297,10 @@ namespace ElectricityNetwork.WPF.Views
         {
             SelectedElement = EPattern.Polygon;
         }
+        private void Text_Click(object sender, RoutedEventArgs e)
+        {
+            SelectedElement = EPattern.Text;
+        }
         private void Undo_Click(object sender, RoutedEventArgs e)
         {
             if (DrawingNetworkCanvas.Children.Count > 1)
@@ -310,6 +354,10 @@ namespace ElectricityNetwork.WPF.Views
                     break;
                 case EPattern.Polygon:
                     PolygonPoints.Add(CurrentPoint);
+                    break;
+                case EPattern.Text:
+                    TextBlockWindow textBlockWindow = new TextBlockWindow();
+                    textBlockWindow.Show();
                     break;
             }
         }

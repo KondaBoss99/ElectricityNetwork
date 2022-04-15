@@ -86,6 +86,9 @@
     <Compile Include="Views\PaternDraw\PolygonWindow.xaml.cs">
       <DependentUpon>PolygonWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PaternDraw\TextBlockWindow.xaml.cs">
+      <DependentUpon>TextBlockWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Styles\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -99,6 +102,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PaternDraw\PolygonWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PaternDraw\TextBlockWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

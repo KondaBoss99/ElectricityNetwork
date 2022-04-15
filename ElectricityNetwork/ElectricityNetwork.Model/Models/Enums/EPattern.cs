@@ -10,8 +10,7 @@ namespace ElectricityNetwork.Model.Models.Enums
     {
         None,
         Ellipse,
-        Rectangle,
+        Text,
         Polygon,
-        Image
     }
 }
